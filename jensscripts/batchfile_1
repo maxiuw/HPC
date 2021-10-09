@@ -1,0 +1,10 @@
+### name of the job
+#PBS -N ex2_script_1
+#PBS -l walltime=10:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -q serial_onecore
+export INDEX=1
+cd /home/muellej/Desktop/Ex_2
+pwd
+module load R-3.6.1-new
+Rscript add.R
