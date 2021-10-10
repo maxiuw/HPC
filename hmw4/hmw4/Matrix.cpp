@@ -1,3 +1,5 @@
+// Copyright (C) 2021 wozniamk@miamioh.edu
+
 #ifndef MATRIX_CPP
 #define MATRIX_CPP
 
@@ -21,21 +23,20 @@ std::ostream& operator<<(std::ostream& os, const Matrix& matrix) {
         // Print a new line at the end of each row just to format the
         // output a bit nicely.
         os << '\n';
-    }
+    } 
     return os;
 }
 
-std::istream& operator>>(std::istream& is, Matrix& matrix){
-    std::string i,j; // rows and cols 
-    is>>i>>j;
+std::istream& operator>>(std::istream& is, Matrix& matrix) {
+    std::string i, j;  // rows and cols 
+    is >> i >> j;
     int rows = std::stoi(i);
     int cols = std::stoi(j);
-    Matrix tmp(rows,cols);
-    for (size_t r = 0; r < rows; r++){
-        for (size_t c = 0; c <cols; c++){
+    Matrix tmp(rows, cols);
+    for (int r = 0; r < rows; r++) {
+        for (int c = 0; c <cols; c++) {
             std::string placeholder;
-            is>>placeholder;
-            std::cout << placeholder;
+            is >> placeholder;
             tmp[r][c] = std::stod(placeholder); 
         }
     }

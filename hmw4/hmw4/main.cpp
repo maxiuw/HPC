@@ -72,17 +72,17 @@ int main(int argc, char *argv[]) {
     const auto mat1 = load(argv[2]);
     std::cout << mat1;
     // Based on the first command-line argument, call different operators.
-    // switch (argv[1][0]) {
-    // case '<': std::cout << mat1; break;
-    // case '+': std::cout << mat1 + load(argv[3]);    break;
-    // case '-': std::cout << mat1 - load(argv[3]);    break;
-    // case '*': std::cout << mat1 * load(argv[3]);    break;
-    // case 'd': std::cout << mat1.dot(load(argv[3])); break;
-    // case 't': std::cout << mat1.transpose();        break;
-    // case 's': std::cout << mat1.apply(sigmoid);     break;
-    // case 'i': std::cout << mat1.apply(invSigmoid);  break;
-    // default:  std::cout << "Invalid matrix operation.\n";
-    // }
+    switch (argv[1][0]) {
+    case '<': std::cout << mat1; break;
+    case '+': std::cout << mat1 + load(argv[3]);    break;
+    case '-': std::cout << mat1 - load(argv[3]);    break;
+    case 'm': std::cout << mat1 * load(argv[3]);    break;
+    case 'd': std::cout << mat1.dot(load(argv[3])); break;
+    case 't': std::cout << mat1.transpose();        break;
+    case 's': std::cout << mat1.apply(sigmoid);     break;
+    case 'i': std::cout << mat1.apply(invSigmoid);  break;
+    default:  std::cout << "Invalid matrix operation.\n";
+    }
     return 0;
 }
 

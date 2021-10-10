@@ -1,3 +1,5 @@
+// Copyright 2021 wozniamk@miamioh.edu
+
 #ifndef MATRIX_H
 #define MATRIX_H
 
@@ -10,7 +12,6 @@
 #include <vector>
 #include <cassert>
 #include <fstream>
-#include <iostream>
 #include <string>
 
 /** Shortcut for the value of each element in the matrix */
@@ -108,11 +109,17 @@ public:
      * \param[in] operation The unary operation to be used to create
      * the given matrix.
      */
-    // template<typename UnaryOp>
-    // Matrix apply(const UnaryOp& operation) const {
-    //     // Note that the unary operation can be applied as:
-    //     // val = operation(val);
-    // }
+    template<typename UnaryOp>
+    Matrix apply(const UnaryOp& operation) const {
+        // Note that the unary operation can be applied as:
+        Matrix M((*this).rows, (*this).cols);
+        for (int i = 0; i < (*this).rows; i++) {
+            for (int j = 0; j < (*this).cols; j++) {
+                M[i][j] = operation((*this)[i][j]);
+            }
+        }
+        return M;
+    }
 
     /**
      * Operator to add two matrices with the same dimensions together.
@@ -127,17 +134,15 @@ public:
      */
     Matrix operator+(const Matrix& rhs) const {
         // make sure dims are the same 
-        assert (this->width() != rhs.width() && this->height() != rhs.height());
+        assert(this->width() == rhs.width() && this->height() == rhs.height());
         int const rows = rhs.height();
         int const cols = rhs.width();
 
-        Matrix M(rows,cols);
-        for (int row = 0; row < this->height(); row++){
-            for (int col = 0; col < this->width(); col++){
-                // M[row][col] = this[row][col] + rhs[row][col];
-                double i = rhs[row][col];
-                double j = (*this)[row][col];
-                
+        Matrix M(rows, cols);
+        for (int row = 0; row < this->height(); row++) {
+            for (int col = 0; col < this->width(); col++) {
+                // M[row][col] = this[row][col] + rhs[row][col];              
+                M[row][col] = rhs[row][col] + (*this)[row][col];                
             }
         }
         return M;
@@ -155,7 +160,21 @@ public:
      * computed by multiplying the corresponding values from \c this
      * and rhs.
      */
-    Matrix operator*(const Matrix& rhs) const;
+    Matrix operator*(const Matrix& rhs) const {
+        assert(this->width() == rhs.width() && this->height() == rhs.height());
+
+        int const rows = rhs.height();
+        int const cols = rhs.width();
+
+        Matrix M(rows, cols);
+        for (int row = 0; row < this->height(); row++) {
+            for (int col = 0; col < this->width(); col++) {
+                // M[row][col] = this[row][col] + rhs[row][col];
+                M[row][col] = (*this)[row][col] * rhs[row][col];                
+            }
+        }
+        return M;   
+    }
 
     /**
      * Operator for computing the Hadamard product of two matrices
@@ -169,7 +188,18 @@ public:
      * computed by multiplying the corresponding values from \c this
      * and rhs.
      */
-    Matrix operator*(const Val val) const;
+    Matrix operator*(const Val val) const {
+        int const rows = (*this).height();
+        int const cols = (*this).width();
+
+        Matrix M(rows, cols);
+        for (int row = 0; row < this->height(); row++) {
+            for (int col = 0; col < this->width(); col++) {
+                M[row][col] = val * (*this)[row][col];                
+            }
+        }
+        return M;  
+    }
     
     /**
      * Operator to subtract two matrices with the same dimensions.
@@ -182,7 +212,21 @@ public:
      * computed by subtracting the corresponding values from \c this
      * and rhs.
      */
-    Matrix operator-(const Matrix& rhs) const;
+    Matrix operator-(const Matrix& rhs) const {
+        assert(this->width() == rhs.width() && this->height() == rhs.height());
+
+        int const rows = rhs.height();
+        int const cols = rhs.width();
+
+        Matrix M(rows, cols);
+        for (int row = 0; row < this->height(); row++) {
+            for (int col = 0; col < this->width(); col++) {
+                // M[row][col] = this[row][col] + rhs[row][col];
+                M[row][col] = (*this)[row][col] - rhs[row][col];                
+            }
+        }
+        return M;   
+    }
     
     /**
      * Performs the dot product of two matrices. This method has a
@@ -196,20 +240,39 @@ public:
      * computed by multiplying the corresponding values from \c this
      * and rhs.
      */
-    Matrix dot(const Matrix& rhs) const;
+    Matrix dot(const Matrix& rhs) const {
+        assert(this->cols == rhs.rows);
+        // rows from this x col from rhs
+        Matrix M((*this).rows, rhs.cols);
+        for (int row = 0; row < (*this).rows; row++) {
+            for (int col = 0; col < rhs.cols; col++) {
+                double placeholder = 0;
+                for (int i = 0; i < (*this).cols; i++) {
+                    placeholder += (*this)[row][i] * rhs[i][col];
+                }
+                M[row][col] = placeholder;
+            }
+        }
+        return M;
+    }
 
     /**
      * Returns the transpose of this matrix.
      */
-    Matrix transpose() const;
+    Matrix transpose() const {
+        Matrix M((*this).cols, (*this).rows);
+        for (int i = 0; i < M.rows; i++) {
+            for (int j = 0; j < M.cols; j++) {
+                M[i][j] = (*this)[j][i];
+            }
+        }
+        return M;
+    }
 
     private:
-
         int rows = this->height();
         int cols = this->width();
         // TwoDVec vals(this->rows,this->cols);
 };
-
-
 
 #endif
