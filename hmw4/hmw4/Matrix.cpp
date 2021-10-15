@@ -28,16 +28,14 @@ std::ostream& operator<<(std::ostream& os, const Matrix& matrix) {
 }
 
 std::istream& operator>>(std::istream& is, Matrix& matrix) {
-    std::string i, j;  // rows and cols 
-    is >> i >> j;
-    int rows = std::stoi(i);
-    int cols = std::stoi(j);
+    // std::string i, j;  // rows and cols 
+    int rows,  cols;
+    is >> rows >> cols;
     Matrix tmp(rows, cols);
     for (int r = 0; r < rows; r++) {
         for (int c = 0; c <cols; c++) {
             std::string placeholder;
-            is >> placeholder;
-            tmp[r][c] = std::stod(placeholder); 
+            is >> tmp[r][c];
         }
     }
     matrix = tmp;

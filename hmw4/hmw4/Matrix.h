@@ -112,9 +112,9 @@ public:
     template<typename UnaryOp>
     Matrix apply(const UnaryOp& operation) const {
         // Note that the unary operation can be applied as:
-        Matrix M((*this).rows, (*this).cols);
-        for (int i = 0; i < (*this).rows; i++) {
-            for (int j = 0; j < (*this).cols; j++) {
+        Matrix M((*this).height(), (*this).width());
+        for (int i = 0; i < (*this).height(); i++) {
+            for (int j = 0; j < (*this).width(); j++) {
                 M[i][j] = operation((*this)[i][j]);
             }
         }
@@ -189,10 +189,10 @@ public:
      * and rhs.
      */
     Matrix operator*(const Val val) const {
-        int const rows = (*this).height();
-        int const cols = (*this).width();
+        // int const rows = (*this).height();
+        // int const cols = (*this).width();
 
-        Matrix M(rows, cols);
+        Matrix M((*this).height(), (*this).width());
         for (int row = 0; row < this->height(); row++) {
             for (int col = 0; col < this->width(); col++) {
                 M[row][col] = val * (*this)[row][col];                
@@ -214,10 +214,8 @@ public:
      */
     Matrix operator-(const Matrix& rhs) const {
         assert(this->width() == rhs.width() && this->height() == rhs.height());
-
         int const rows = rhs.height();
         int const cols = rhs.width();
-
         Matrix M(rows, cols);
         for (int row = 0; row < this->height(); row++) {
             for (int col = 0; col < this->width(); col++) {
@@ -241,16 +239,14 @@ public:
      * and rhs.
      */
     Matrix dot(const Matrix& rhs) const {
-        assert(this->cols == rhs.rows);
+        assert((*this).width() == rhs.height());
         // rows from this x col from rhs
-        Matrix M((*this).rows, rhs.cols);
-        for (int row = 0; row < (*this).rows; row++) {
-            for (int col = 0; col < rhs.cols; col++) {
-                double placeholder = 0;
-                for (int i = 0; i < (*this).cols; i++) {
-                    placeholder += (*this)[row][i] * rhs[i][col];
-                }
-                M[row][col] = placeholder;
+        Matrix M((*this).height(), rhs.width());
+        for (int row = 0; row < (*this).height(); row++) {
+            for (int col = 0; col < rhs.width(); col++) {
+                for (int i = 0; i < (*this).width(); i++) {
+                    M[row][col] += (*this)[row][i] * rhs[i][col];
+                }                
             }
         }
         return M;
@@ -260,19 +256,14 @@ public:
      * Returns the transpose of this matrix.
      */
     Matrix transpose() const {
-        Matrix M((*this).cols, (*this).rows);
-        for (int i = 0; i < M.rows; i++) {
-            for (int j = 0; j < M.cols; j++) {
+        Matrix M((*this).width(), (*this).height());
+        for (int i = 0; i < M.height(); i++) {
+            for (int j = 0; j < M.width(); j++) {
                 M[i][j] = (*this)[j][i];
             }
         }
         return M;
     }
-
-    private:
-        int rows = this->height();
-        int cols = this->width();
-        // TwoDVec vals(this->rows,this->cols);
 };
 
 #endif
