@@ -212,18 +212,18 @@ public:
      * computed by subtracting the corresponding values from \c this
      * and rhs.
      */
-    Matrix operator-(const Matrix& rhs) const {
+    Matrix operator-(const Matrix& rhs) {
         assert(this->width() == rhs.width() && this->height() == rhs.height());
         int const rows = rhs.height();
         int const cols = rhs.width();
-        Matrix M(rows, cols);
+        // Matrix M(rows, cols);
         for (int row = 0; row < this->height(); row++) {
             for (int col = 0; col < this->width(); col++) {
                 // M[row][col] = this[row][col] + rhs[row][col];
-                M[row][col] = (*this)[row][col] - rhs[row][col];                
+                (*this)[row][col] -= rhs[row][col];                
             }
         }
-        return M;   
+        return *this;   
     }
     
     /**
